@@ -1,0 +1,40 @@
+function [result, dJ]=semi_cons_rhs(x,metric,detJ,h)
+result=zeros(size(x));
+dJ=zeros(size(detJ));
+[d_xi1,d_xi2] = diff_xi(x,h);
+Ja1=cat(1,d_xi2(2,:,:,:),-d_xi2(1,:,:,:));
+Ja2=cat(1,-d_xi1(2,:,:,:),d_xi1(1,:,:,:));
+M=zeros(2,2,size(x,3),size(x,4));
+ro=zeros(1,1,size(x,3),size(x,4));
+for i=1:size(x,3)
+    for j=1:size(x,4)
+        M(:,:,i,j)=metric(x(:,:,i,j));
+        ro(:,:,i,j)=sqrt(det(M(:,:,i,j)));
+    end
+end
+Mi=pageinv(M);
+roMidJ=ro.*Mi./detJ;
+Ja1roma1=pagemtimes(pagemtimes(Ja1,'transpose',roMidJ,'none'),Ja1);
+Ja1roma2=pagemtimes(pagemtimes(Ja1,'transpose',roMidJ,'none'),Ja2);
+Ja2roma2=pagemtimes(pagemtimes(Ja2,'transpose',roMidJ,'none'),Ja2);
+
+[d_xi1a1a1,~]=diff_xi(Ja1roma1,h);
+[d_xi1a2a1,d_xi2a2a1]=diff_xi(Ja1roma2,h);
+[~,d_xi2a2a2]=diff_xi(Ja2roma2,h);
+
+% Balancing function
+frob2=@(F) sum(sum(F.*F,1),2);
+p=sqrt(frob2(d_xi1a1a1)+frob2(d_xi1a2a1)+frob2(d_xi2a2a1)+frob2(d_xi2a2a2));
+
+result=-(d_xi1.*(d_xi1a1a1+d_xi2a2a1)+...
+    d_xi2.*(d_xi1a2a1+d_xi2a2a2))./detJ./p;
+
+result(:,:,1,:)=0;
+result(:,:,end,:)=0;
+result(:,:,:,1)=0;
+result(:,:,:,end)=0;
+
+[cd1,cd2]=diff_central(x,h);
+Jxit=-cd2(2,:,:,:).*(result(1,:,:,1:end-1)+result(1,:,:,2:end))/2
+Jetat=
+dJ(:,:,2:end-1,2:end-1)=-(Jxit(:,:,:,2:end)-Jxit(:,:,:,1:end-1))/h-(Jetat(:,:,2:end,:)-Jetat(:,:,1:end-1,:))/h;
