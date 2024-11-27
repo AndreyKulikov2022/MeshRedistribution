@@ -10,7 +10,7 @@ end
 dt=h.^2/2;
 %metric=@(x) cartezian_metric(x);
 %metric=@(x) rotated_metric(x);
-metric=@(x) sin_metric(x,[1;0], N);
+metric=@(x) sin_metricN(x,[1;0], N);
 %metric=@(x) circ_metric(x,[1;0],1/2);
 video=false;
 if video
@@ -25,7 +25,7 @@ if video
     plot([0:0.01:1],1/2+1/4*sin(2*pi*[0:0.01:1]),'r');
     h_g=plot_mesh(x);
 end
-n_steps=40;
+n_steps=80;
 figure
 hold on
 h_q=plot([],[]);
@@ -73,5 +73,5 @@ for i=1:n_steps
 end
 figure("Position",[0,0,1000,1000])
 hold on
-plot([0:0.01:1],1/2+1/4*sin(2*pi*[0:0.01:1]),'r');
+plot([0:0.1:(N-1)],(N-1)*(1/2+1/4*sin(2*pi*[0:0.1:(N-1)]/(N-1))),'r');
 h_g=plot_mesh(x);
