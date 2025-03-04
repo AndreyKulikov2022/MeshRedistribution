@@ -25,7 +25,7 @@ if video
     plot([0:0.01:1],1/2+1/4*sin(2*pi*[0:0.01:1]),'r');
     h_g=plot_mesh(x);
 end
-n_steps=80;
+n_steps=10;
 figure
 hold on
 h_q=plot([],[]);
@@ -44,7 +44,7 @@ for i=1:n_steps
   x_diff = x_new-x;
 
   %% Manually prevent singular mesh.
-    tol=0.4;
+    tol=0.2;
     % Move half of the mesh and check if degeneration happened.
     x_temp = x + x_diff.*sub_set;
     % Check degeneration

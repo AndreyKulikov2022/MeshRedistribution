@@ -3,9 +3,9 @@ function [As, Bs] = A_B_ali(x,metric,I, h)
 % x - coodrdinates
 % M - metric tensor, I - identity matrices.
 % h - uniform grid step
-[d_xi1,d_xi2] = diff_xi(x,h);
-J=cat(2,d_xi1,d_xi2);
-Ji=pageinv(J);
+% [d_xi1,d_xi2] = diff_xi(x,h);
+% J=cat(2,d_xi1,d_xi2);
+Ji=J_inv(I,x,h);
 M=zeros(2,2,size(x,3),size(x,4));
 ro=zeros(1,1,size(x,3),size(x,4));
 for i=1:size(x,3)

@@ -4,7 +4,7 @@ function x_new = implicit_euler(x,metric,I, h, tau, dt)
 [As,Bs] = A_B_ali(x,metric,I, h);
 %% Balance
 frob2=@(F) sum(sum(F.*F,1),2);
-p=sqrt(frob2(As{1,1})+frob2(As{1,2})+frob2(As{2,1})+frob2(As{2,2})+frob2(Bs{1})+frob2(Bs{2}));
+p=sqrt(frob2(As{1,1})+frob2(As{1,2})+frob2(As{2,1})+frob2(As{2,2}));%+frob2(Bs{1})+frob2(Bs{2})); %they say they use without Bs and no max
 As{1,1}=As{1,1}./p/tau/h^2*dt;
 As{1,2}=As{1,2}./p/tau/4/h^2*dt;
 As{2,1}=As{2,1}./p/tau/4/h^2*dt;
@@ -12,7 +12,7 @@ As{2,2}=As{2,2}./p/tau/h^2*dt;
 Bs{1}=Bs{1}./p/tau/(h)*dt;
 Bs{2}=Bs{2}./p/tau/(h)*dt;
 
- %% Zero boundary components
+ %% Zero boundary components %they say they do 1D MMPDE for boundary
            As{1,1}(:,:,1,:) = 0;
            As{1,1}(:,:,end,:) = 0;
            As{1,1}(:,:,:,1) = 0;

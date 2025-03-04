@@ -12,11 +12,11 @@ dt=h.^2/2;
 %metric=@(x) rotated_metric(x);
 metric=@(x) sin_metric(x,[1;0]);
 %metric=@(x) circ_metric(x,[1;0],1/2);
+figure("Position",[0,0,1000,1000])
+hold on
 video=true;
 if video
-    figure("Position",[0,0,1000,1000])
-    hold on
-    testGIF='Mesh.gif';
+    testGIF='Mesh2.gif';
     F=getframe(gcf);
     im=frame2im(F);
     [imind,cm] = rgb2ind(im,128);
@@ -25,7 +25,7 @@ if video
     plot([0:0.01:1],1/2+1/4*sin(2*pi*[0:0.01:1]),'r');
     h_g=plot_mesh(x);
 end
-n_steps=300;
+n_steps=30000;
 %x=fsolve(@(x)mmpde_rhs(x,metric,I,h),x);
 %x=non_conservative(x,metric,I,h,dt,n_steps);
 bs=zeros(1,n_steps);
@@ -33,8 +33,6 @@ bders=zeros(1,n_steps);
 as=zeros(1,n_steps);
 aders=zeros(1,n_steps);
 rhss=zeros(1,n_steps);
-figure
-hold on
 h_q=plot([],[]);
 B=zeros(size(x));
 
@@ -45,22 +43,23 @@ sub_set(:,:,2:2:end,2:2:end)=true;
 tau=1;
 
 for i=1:n_steps
-  x_new=implicit_euler(x,metric,I,h, tau, dt);
+%   x_new=implicit_euler(x,metric,I,h, tau, dt);
+% 
+%   x_diff = x_new-x;
+% 
+%   %% Manually prevent singular mesh. % They don't seem to try preventing mesh folding
+%     tol=0.4;
+%     % Move half of the mesh and check if degeneration happened.
+%     x_temp = x + x_diff.*sub_set;
+%     % Check degeneration
+%     degen = is_degen(x_temp,tol);
+%     % Don't move to degenerate state.
+%     x_temp=x.*degen+x_temp.*(~degen);
+%     x=x_temp + x_diff.*(~sub_set);
+%     degen = is_degen(x,tol);
+%     x=x_temp.*degen+x.*(~degen);
 
-  x_diff = x_new-x;
-
-  %% Manually prevent singular mesh.
-    tol=0.4;
-    % Move half of the mesh and check if degeneration happened.
-    x_temp = x + x_diff.*sub_set;
-    % Check degeneration
-    degen = is_degen(x_temp,tol);
-    % Don't move to degenerate state.
-    x_temp=x.*degen+x_temp.*(~degen);
-    x=x_temp + x_diff.*(~sub_set);
-    degen = is_degen(x,tol);
-    x=x_temp.*degen+x.*(~degen);
-
+ x=implicit_euler(x,metric,I,h, tau, dt);
 
     if video
         if draw_count==10

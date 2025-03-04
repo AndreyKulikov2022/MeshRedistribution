@@ -47,23 +47,23 @@ for i=1:n_steps
     [rhs,bs(i),bders(i),as(i),aders(i),q_ali]=mmpde_rhs(x,metric,I,h);
     rhss(i)=sum(abs(rhs),"all");
 
-    %% Manually prevent singular mesh.
-    tol=0.4;
-    % Move half of the mesh and check if degeneration happened.
-    x_temp = x + dt*rhs.*sub_set;
-    % Check degeneration
-    degen = is_degen(x_temp,tol);
-    % Don't move to degenerate state.
-    x_temp=x.*degen+x_temp.*(~degen);
-    x=x_temp + dt*rhs.*(~sub_set);
-    degen = is_degen(x,tol);
-    x=x_temp.*degen+x.*(~degen);
+%     %% Manually prevent singular mesh.
+%     tol=0.4;
+%     % Move half of the mesh and check if degeneration happened.
+%     x_temp = x + dt*rhs.*sub_set;
+%     % Check degeneration
+%     degen = is_degen(x_temp,tol);
+%     % Don't move to degenerate state.
+%     x_temp=x.*degen+x_temp.*(~degen);
+%     x=x_temp + dt*rhs.*(~sub_set);
+%     degen = is_degen(x,tol);
+%     x=x_temp.*degen+x.*(~degen);
 
 %     if(any(degen,"all"))
 %         disp("oops");
 %     end
 
-   % x=x+dt*rhs;
+    x=x+dt*rhs;
 %     delete(h_q);
 %     h_q=plot4d(x,q_ali);
 %     clim([0,30]);
