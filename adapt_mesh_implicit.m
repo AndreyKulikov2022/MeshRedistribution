@@ -11,21 +11,21 @@ dt=h.^2/2;
 %metric=@(x) cartezian_metric(x);
 %metric=@(x) rotated_metric(x);
 metric=@(x) sin_metric(x,[1;0]);
-%metric=@(x) circ_metric(x,[1;0],1/2);
+%metric=@(x) circ_metric(x,[1;0],1/4);
 figure("Position",[0,0,1000,1000])
 hold on
 video=true;
 if video
-    testGIF='Mesh2.gif';
+    testGIF='Mesh3.gif';
     F=getframe(gcf);
     im=frame2im(F);
     [imind,cm] = rgb2ind(im,128);
     imwrite(imind,cm,testGIF,'gif','DelayTime',0.0001, 'Loopcount',inf);
     draw_count=10;
-    plot([0:0.01:1],1/2+1/4*sin(2*pi*[0:0.01:1]),'r');
+    plot([0:0.01:1],1/4*sin(2*pi*[0:0.01:1])+1/2,'r');
     h_g=plot_mesh(x);
 end
-n_steps=30000;
+n_steps=300;
 %x=fsolve(@(x)mmpde_rhs(x,metric,I,h),x);
 %x=non_conservative(x,metric,I,h,dt,n_steps);
 bs=zeros(1,n_steps);
